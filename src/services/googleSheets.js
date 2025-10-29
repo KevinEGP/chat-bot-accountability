@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { logger } from "../utils/logger.js";
+import { messages } from "../utils/messages.js";
 
 const auth = new google.auth.GoogleAuth({
   keyFile: "credentials.json",
@@ -8,7 +9,7 @@ const auth = new google.auth.GoogleAuth({
 
 export async function appendToSheet(data) {
   const sheets = google.sheets({ version: "v4", auth: await auth.getClient() });
-  const spreadsheetId = "1uUN2DVC3YMBfuZt-iLaQFQO-WXrU8GDmsxmj4G3x7qE";
+  const spreadsheetId = messages.spreadsheetId;
   const range = "Logs!A2";
 
   if (!data || data.action === null || data.client === null || data.amount === null) {
