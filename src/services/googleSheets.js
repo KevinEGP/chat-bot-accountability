@@ -14,12 +14,12 @@ export async function appendToSheet(data) {
   const spreadsheetId = messages.spreadsheetId;
   const range = "Logs!A2";
 
-  if (!data || data.action === null || data.client === null || data.amount === null) {
+  if (!data || data.action === null || data.client === null || data.amount === null || data.method === null) {
     throw new Error("Not valid data provided");
   }
 
   const values = [
-    [new Date().toLocaleString(), data.action, data.client, data.identifier, data.amount]
+    [new Date().toLocaleString("es-CO", {timeZone: "America/Bogota"}), data.action, data.client, data.identifier, data.amount, data.method]
   ];
 
   await sheets.spreadsheets.values.append({
