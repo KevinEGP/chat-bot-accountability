@@ -14,7 +14,11 @@ export async function appendToSheet(data) {
   const spreadsheetId = messages.spreadsheetId;
   const range = "Logs!A2";
 
-  if (!data || data.action === null || data.client === null || data.amount === null || data.method === null) {
+  if (!data
+    || data.action === null
+    || data.client === null
+    || data.amount === null
+    || (data.action === "Abono" && data.method === null)) {
     throw new Error("Not valid data provided");
   }
 

@@ -2,8 +2,8 @@ export const messages = {
   success: (parsed) => `✅ Información guardada!
 Tipo: ${parsed.action}
 Cliente: ${parsed.client}
-Caso: ${parsed.identifier || 'General'}
-Método de pago: ${parsed.method}
+Caso: ${parsed.identifier || 'N/A'}
+Método de pago: ${parsed.method || 'N/A'}
 Valor: ${parsed.amount.toLocaleString("es-CO")}`,
 
   parseError: "❌ Error al procesar el mensaje. Por favor, intenta de nuevo.",
