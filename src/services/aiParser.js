@@ -2,6 +2,7 @@
 import 'dotenv/config';
 import { GoogleGenAI } from "@google/genai";
 import { messages } from '../utils/messages.js';
+import { logger } from '../utils/logger.js';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const MODEL = "gemini-2.0-flash";
@@ -25,7 +26,7 @@ export async function parseMessage(text) {
   try {
     return JSON.parse(raw);
   } catch (err) {
-    console.error("AI returned invalid JSON:", raw);
+    logger.error("AI returned invalid JSON:", raw);
     return null;
   }
 }

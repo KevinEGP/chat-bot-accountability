@@ -4,7 +4,7 @@ import webhookRouter from "./routes/webhook.js";
 
 export const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 app.use("/webhook", webhookRouter);
 
 // Health check route
