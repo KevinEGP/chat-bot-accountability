@@ -4,11 +4,10 @@ import { parseMessage } from "../services/aiParser.js";
 import { appendToSheet } from "../services/googleSheets.js";
 import { logger } from "../utils/logger.js";
 import { messages } from "../utils/messages.js";
+import { sendWhatsAppMessage } from "./whatsappService.js";
 
 const router = express.Router();
 const verifyToken = process.env.VERIFY_TOKEN;
-const whatsappToken = process.env.WHATSAPP_TOKEN;
-const phoneNumberId = process.env.PHONE_NUMBER_ID;
 
 router.get('/', (req, res) => {
   const { 'hub.mode': mode, 'hub.challenge': challenge, 'hub.verify_token': token } = req.query;
@@ -26,16 +25,15 @@ router.post("/", async (req, res) => {
   const message = change?.messages?.[0];
   if (!message || !message.text) return res.sendStatus(200);
 
-  const from = message.from; // User's phone number
-  const body = message.text.body; // Message text
+  const from = message.from;
+  const body = message.text.body;
 
   logger.info(`📩 Message from ${from}: ${body}`);
   let parsed = null;
 	let responseMessage = "";
   try {
     parsed = await parseMessage(body);
-		responseMessage = messages.success(parsed);
-		
+		responseMessage = messages.success(parsed);	
   } catch (error) {
 		logger.error("Error on parse: ", error.message);		
     responseMessage = messages.parseError;
@@ -47,25 +45,15 @@ router.post("/", async (req, res) => {
     if (parsed) await appendToSheet(parsed);
 	} catch (error) {
 			logger.error("Error on log to sheet: ", error.message);
-			responseMessage = messages.parseError;		
-			logger.error("Error on log : ", responseMessage);
+			responseMessage = messages.parseError;
   }
 
-  
-  await axios.post(
-      `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
-      {
-        messaging_product: "whatsapp",
-        to: from,
-        text: { body: responseMessage },
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${whatsappToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+  try {
+    await sendWhatsAppMessage(from, responseMessage);    
+  } catch (error) {
+    logger.error("Error on send response: ", error.message);
+    responseMessage = messages.parseError;
+  }
   res.sendStatus(200);
 });
 
