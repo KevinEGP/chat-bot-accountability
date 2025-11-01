@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import webhookRouter from "./routes/webhook.js";
 
 export const app = express();

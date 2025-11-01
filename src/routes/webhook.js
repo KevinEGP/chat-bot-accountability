@@ -1,10 +1,9 @@
 import express from "express";
-import axios from "axios";
 import { parseMessage } from "../services/aiParser.js";
 import { appendToSheet } from "../services/googleSheets.js";
 import { logger } from "../utils/logger.js";
 import { messages } from "../utils/messages.js";
-import { sendWhatsAppMessage } from "./whatsappService.js";
+import { sendWhatsAppMessage } from "../services/whatsappService.js";
 
 const router = express.Router();
 const verifyToken = process.env.VERIFY_TOKEN;
